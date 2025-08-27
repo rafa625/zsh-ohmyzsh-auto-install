@@ -21,3 +21,7 @@ This repository contains scripts to automate the installation of [Zsh](https://w
 chmod +x zsh.sh zsh-purge.sh
 ./zsh.sh
 ```
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
