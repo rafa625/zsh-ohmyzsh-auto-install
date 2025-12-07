@@ -1,32 +1,50 @@
 #!/bin/bash
 
-# Remover o Zsh e suas configurações
-echo "Removendo Zsh e suas configurações..."
+set -e
 
-# Verificar se o Zsh está instalado
-if dpkg -l | grep -q zsh; then
-  sudo apt remove --purge -y zsh
+echo "Executando purge completo do Zsh e Oh My Zsh..."
+
+# --- REMOÇÃO DO ZSH ---
+echo "Verificando instalação do Zsh..."
+if dpkg -l | grep -q "^ii  zsh "; then
+  echo "Zsh encontrado. Removendo..."
+  sudo apt remove --purge -y zsh zsh-common
   echo "Zsh removido."
 else
   echo "Zsh não está instalado."
 fi
 
-# Remover o Oh My Zsh se estiver instalado
-if [ -d "$HOME/.oh-my-zsh" ]; then
-  rm -rf $HOME/.oh-my-zsh
+# --- REMOÇÃO DO OH MY ZSH ---
+OMZ_DIR="$HOME/.oh-my-zsh"
+
+echo "Verificando instalação do Oh My Zsh..."
+if [ -d "$OMZ_DIR" ]; then
+  echo "Oh My Zsh encontrado. Removendo..."
+  rm -rf "$OMZ_DIR"
   echo "Oh My Zsh removido."
 else
   echo "Oh My Zsh não está instalado."
 fi
 
-# Remover arquivos de configuração do Zsh
-for file in ~/.zshrc ~/.zprofile ~/.zshenv ~/.zlogin ~/.zlogout; do
+# --- REMOÇÃO DE ARQUIVOS DE CONFIG ---
+echo "Removendo arquivos de configuração do Zsh..."
+
+ZSH_FILES=(
+  "$HOME/.zshrc"
+  "$HOME/.zprofile"
+  "$HOME/.zshenv"
+  "$HOME/.zlogin"
+  "$HOME/.zlogout"
+)
+
+for file in "${ZSH_FILES[@]}"; do
   if [ -f "$file" ]; then
-    rm "$file"
-    echo "Arquivo $file removido."
+    rm -f "$file"
+    echo "Arquivo removido: $file"
   else
-    echo "Arquivo $file não encontrado."
+    echo "Arquivo não encontrado: $file"
   fi
 done
 
-echo "Processo de remoção concluído."
+echo "Purge concluído com sucesso."
+
